@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { menu } from "../../menu_sections";
+import { menu } from "../../data";
 import "./menu.scss";
 
 const Menu = () => {
@@ -10,7 +10,7 @@ const Menu = () => {
           <div key={item.id} className="item">
             <span className="title">{item.title}</span>
             {item.listItems.map((menu_item) => (
-              <Link to={menu_item.url} className="listItem">
+              <Link to={menu_item.url} key={menu_item.id} className="listItem">
                 <img src={`/${menu_item.icon}`} alt={menu_item.title} />
                 <span className="listItemLitle">{menu_item.title}</span>
               </Link>
