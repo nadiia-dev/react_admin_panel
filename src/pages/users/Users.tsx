@@ -3,6 +3,8 @@ import DataTable from "../../components/dataTable/DataTable";
 import "./users.scss";
 import { getUsers } from "../../services/usersApi";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import Add from "../../components/add/Add";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -53,6 +55,7 @@ const columns: GridColDef[] = [
 ];
 
 const Users = () => {
+  const [open, setIsOpen] = useState(false);
   const {
     data: users,
     isLoading,
@@ -62,6 +65,10 @@ const Users = () => {
     queryFn: getUsers,
   });
 
+  const handleOpen = (val: boolean) => {
+    setIsOpen(val);
+  };
+
   if (isLoading) return <p>Loading...</p>;
   if (error instanceof Error) return <p>Error: {error.message}</p>;
 
@@ -69,9 +76,10 @@ const Users = () => {
     <div className="users">
       <div className="info">
         <h1>All Users</h1>
-        <button>Add New User</button>
+        <button onClick={() => handleOpen(true)}>Add New User</button>
       </div>
       {users && <DataTable slug="users" columns={columns} rows={users} />}
+      {open && <Add slug="user" columns={columns} setOpen={handleOpen} />}
     </div>
   );
 };

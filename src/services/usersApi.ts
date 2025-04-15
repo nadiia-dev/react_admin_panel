@@ -7,6 +7,7 @@ import {
   deleteDoc,
   doc,
   where,
+  addDoc,
 } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { User } from "../types/User";
@@ -41,5 +42,14 @@ export const deleteUser = async (id: number) => {
     });
   } catch (e) {
     console.error(`Error ${e}`);
+  }
+};
+
+export const createUser = async (userData: User) => {
+  try {
+    const data = await addDoc(collection(db, "users"), userData);
+    console.log(data);
+  } catch (e) {
+    console.error(e);
   }
 };

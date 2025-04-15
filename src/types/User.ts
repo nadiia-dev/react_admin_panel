@@ -7,5 +7,5 @@ export interface User {
   phone: string;
   createdAt: string;
   verified?: boolean;
-  amount: string;
+  amount?: string;
 }
