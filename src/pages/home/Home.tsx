@@ -2,6 +2,8 @@ import BarChartBox from "../../components/barChart/BarChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
 import TopBox from "../../components/topBox/TopBox";
 import {
+  barChartBoxRevenue,
+  barChartBoxVisit,
   chartBoxConversion,
   chartBoxProduct,
   chartBoxRevenue,
@@ -30,9 +32,11 @@ const Home = () => {
       </div>
       <div className="box box7">Box7</div>
       <div className="box box8">
-        <BarChartBox />
+        <BarChartBox {...barChartBoxRevenue} />
       </div>
-      <div className="box box9">Box9</div>
+      <div className="box box9">
+        <BarChartBox {...barChartBoxVisit} />
+      </div>
     </div>
   );
 };
