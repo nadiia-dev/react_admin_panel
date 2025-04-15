@@ -1,14 +1,15 @@
 import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
 import "./dataTable.scss";
 import { User } from "../../types/User";
+import { Product } from "../../types/Product";
 import { Link } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteUser } from "../../services/usersApi";
 
 interface Props {
   columns: GridColDef[];
-  rows: User[];
+  rows: User[] | Product[];
   slug: string;
+  onDelete: (id: number) => Promise<unknown>;
 }
 
 const DataTable = (props: Props) => {
@@ -16,15 +17,14 @@ const DataTable = (props: Props) => {
 
   const mutation = useMutation({
     mutationFn: (id: number) => {
-      return deleteUser(id);
+      return props.onDelete(id);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
+      queryClient.invalidateQueries({ queryKey: [`all${props.slug}s`] });
     },
   });
 
   const handleDelete = (id: number) => {
-    console.log(id);
     mutation.mutate(id);
   };
 

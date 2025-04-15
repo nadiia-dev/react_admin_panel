@@ -47,8 +47,7 @@ export const deleteUser = async (id: number) => {
 
 export const createUser = async (userData: User) => {
   try {
-    const data = await addDoc(collection(db, "users"), userData);
-    console.log(data);
+    await addDoc(collection(db, "users"), userData);
   } catch (e) {
     console.error(e);
   }

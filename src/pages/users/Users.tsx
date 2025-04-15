@@ -1,7 +1,7 @@
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/dataTable/DataTable";
 import "./users.scss";
-import { getUsers } from "../../services/usersApi";
+import { deleteUser, getUsers } from "../../services/usersApi";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import Add from "../../components/add/Add";
@@ -78,8 +78,15 @@ const Users = () => {
         <h1>All Users</h1>
         <button onClick={() => handleOpen(true)}>Add New User</button>
       </div>
-      {users && <DataTable slug="users" columns={columns} rows={users} />}
-      {open && <Add slug="user" columns={columns} setOpen={handleOpen} />}
+      {users && (
+        <DataTable
+          slug="User"
+          columns={columns}
+          rows={users}
+          onDelete={deleteUser}
+        />
+      )}
+      {open && <Add slug="User" columns={columns} setOpen={handleOpen} />}
     </div>
   );
 };
