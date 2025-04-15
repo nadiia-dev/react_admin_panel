@@ -1,5 +1,6 @@
 import BarChartBox from "../../components/barChart/BarChartBox";
 import ChartBox from "../../components/chartBox/ChartBox";
+import PieChartBox from "../../components/pieChartBox/PieChartBox";
 import TopBox from "../../components/topBox/TopBox";
 import {
   barChartBoxRevenue,
@@ -23,7 +24,9 @@ const Home = () => {
       <div className="box box3">
         <ChartBox {...chartBoxConversion} />
       </div>
-      <div className="box box4">Box4</div>
+      <div className="box box4">
+        <PieChartBox />
+      </div>
       <div className="box box5">
         <ChartBox {...chartBoxProduct} />
       </div>
