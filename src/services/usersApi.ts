@@ -11,3 +11,13 @@ export const getTopDealUsers = async (): Promise<User[]> => {
     ...doc.data(),
   })) as User[];
 };
+
+export const getUsers = async (): Promise<User[]> => {
+  const usersRef = collection(db, "users");
+  const q = query(usersRef);
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  })) as User[];
+};

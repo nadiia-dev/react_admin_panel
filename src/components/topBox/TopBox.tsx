@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import "./topBox.scss";
 import { getTopDealUsers } from "../../services/usersApi";
-// import { User } from "../../types/User";
 
 const TopBox = () => {
   const { data, isLoading, error } = useQuery({
