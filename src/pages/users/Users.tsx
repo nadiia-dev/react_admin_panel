@@ -1,10 +1,12 @@
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../components/dataTable/DataTable";
 import "./users.scss";
-import { deleteUser, getUsers } from "../../services/usersApi";
-import { useQuery } from "@tanstack/react-query";
+import { createUser, deleteUser, getUsers } from "../../services/usersApi";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Add from "../../components/add/Add";
+import { formatDate } from "../../services/formatDate";
+import { User } from "../../types/User";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -52,10 +54,26 @@ const columns: GridColDef[] = [
     width: 150,
     type: "boolean",
   },
+  {
+    field: "amount",
+    headerName: "Amount",
+    width: 150,
+    type: "number",
+  },
 ];
 
 const Users = () => {
   const [open, setIsOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (userData: User) => createUser(userData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`allUsers`] });
+    },
+  });
+
   const {
     data: users,
     isLoading,
@@ -67,6 +85,21 @@ const Users = () => {
 
   const handleOpen = (val: boolean) => {
     setIsOpen(val);
+  };
+
+  const onSubmit = (data: Record<string, string>) => {
+    const fieldData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      verified: Boolean(data.verified),
+      id: String(Math.floor(Math.random() * (10000 - 16 + 1)) + 16),
+      createdAt: formatDate(new Date()),
+      img: "",
+    };
+
+    mutation.mutate(fieldData);
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -86,7 +119,14 @@ const Users = () => {
           onDelete={deleteUser}
         />
       )}
-      {open && <Add slug="User" columns={columns} setOpen={handleOpen} />}
+      {open && (
+        <Add
+          slug="User"
+          columns={columns}
+          setOpen={handleOpen}
+          onSubmit={onSubmit}
+        />
+      )}
     </div>
   );
 };

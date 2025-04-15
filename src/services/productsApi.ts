@@ -21,7 +21,6 @@ export const getProducts = async (): Promise<Product[]> => {
 };
 
 export const deleteProduct = async (id: number) => {
-  console.log(id);
   try {
     const q = query(collection(db, "products"), where("id", "==", id));
     console.log(q);

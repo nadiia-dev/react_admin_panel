@@ -1,62 +1,27 @@
 import { GridColDef } from "@mui/x-data-grid";
 import "./add.scss";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createUser } from "../../services/usersApi";
-import { User } from "../../types/User";
 
 interface Props {
   columns: GridColDef[];
   slug: string;
   setOpen: (val: boolean) => void;
+  onSubmit: (formData: Record<string, string>) => void;
 }
 
-const formatDate = (date: Date) => {
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-
-  return `${day}.${month}.${year}`;
-};
-
 const Add = (props: Props) => {
-  const queryClient = useQueryClient();
-
-  const mutation = useMutation({
-    mutationFn: (userData: User) => createUser(userData),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["allUsers"] });
-    },
-  });
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
-    const firstName = (form.elements.namedItem("firstName") as HTMLInputElement)
-      .value;
-    const lastName = (form.elements.namedItem("lastName") as HTMLInputElement)
-      .value;
-    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-    const phone = (form.elements.namedItem("phone") as HTMLInputElement).value;
-    const verified = (form.elements.namedItem("verified") as HTMLInputElement)
-      .value;
+    const formData: Record<string, string> = {};
 
-    const createdAt = formatDate(new Date());
+    props.columns.forEach(({ field }) => {
+      const fieldValue = form.elements.namedItem(field) as HTMLInputElement;
+      if (fieldValue) {
+        formData[field] = fieldValue.value;
+      }
+    });
 
-    const userData = {
-      id: String(Math.floor(Math.random() * (10000 - 16 + 1)) + 16),
-      firstName,
-      lastName,
-      email,
-      phone,
-      verified: Boolean(verified),
-      amount: "0",
-      createdAt,
-      img: "",
-    };
-
-    console.log(userData);
-
-    mutation.mutate(userData);
+    props.onSubmit(formData);
     props.setOpen(false);
   };
 

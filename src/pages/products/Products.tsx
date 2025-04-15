@@ -4,7 +4,14 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import DataTable from "../../components/dataTable/DataTable";
 import Add from "../../components/add/Add";
-import { deleteProduct, getProducts } from "../../services/productsApi";
+import {
+  createProduct,
+  deleteProduct,
+  getProducts,
+} from "../../services/productsApi";
+import { formatDate } from "../../services/formatDate";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Product } from "../../types/Product";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -56,6 +63,16 @@ const columns: GridColDef[] = [
 
 const Products = () => {
   const [open, setIsOpen] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (productData: Product) => createProduct(productData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`allProducts`] });
+    },
+  });
+
   const {
     data: products,
     isLoading,
@@ -67,6 +84,21 @@ const Products = () => {
 
   const handleOpen = (val: boolean) => {
     setIsOpen(val);
+  };
+
+  const onSubmit = (data: Record<string, string>) => {
+    const fieldData = {
+      title: data.title,
+      price: data.price,
+      color: data.color,
+      producer: data.producer,
+      inStock: Boolean(data.inStock),
+      id: String(Math.floor(Math.random() * (10000 - 16 + 1)) + 16),
+      createdAt: formatDate(new Date()),
+      img: "",
+    };
+
+    mutation.mutate(fieldData);
   };
 
   if (isLoading) return <p>Loading...</p>;
@@ -86,7 +118,14 @@ const Products = () => {
           onDelete={deleteProduct}
         />
       )}
-      {open && <Add slug="Product" columns={columns} setOpen={handleOpen} />}
+      {open && (
+        <Add
+          slug="Product"
+          columns={columns}
+          setOpen={handleOpen}
+          onSubmit={onSubmit}
+        />
+      )}
     </div>
   );
 };
