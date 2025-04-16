@@ -12,6 +12,7 @@ import {
 import { formatDate } from "../../helpers/formatDate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Product } from "../../types/Product";
+import { toBoolean } from "../../helpers/toBoolean";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -92,7 +93,7 @@ const Products = () => {
       price: data.price,
       color: data.color,
       producer: data.producer,
-      inStock: Boolean(data.inStock),
+      inStock: toBoolean(data.inStock),
       id: String(Math.floor(Math.random() * (10000 - 16 + 1)) + 16),
       createdAt: formatDate(new Date()),
       img: data.img,

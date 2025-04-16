@@ -7,6 +7,7 @@ import { useState } from "react";
 import Add from "../../components/add/Add";
 import { formatDate } from "../../helpers/formatDate";
 import { User } from "../../types/User";
+import { toBoolean } from "../../helpers/toBoolean";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -93,7 +94,7 @@ const Users = () => {
       lastName: data.lastName,
       email: data.email,
       phone: data.phone,
-      verified: Boolean(data.verified),
+      verified: toBoolean(data.verified),
       id: String(Math.floor(Math.random() * (10000 - 16 + 1)) + 16),
       createdAt: formatDate(new Date()),
       img: data.img,

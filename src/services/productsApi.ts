@@ -6,6 +6,7 @@ import {
   doc,
   where,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { Product } from "../types/Product";
@@ -56,5 +57,23 @@ export const createProduct = async (productData: Product) => {
     console.log(data);
   } catch (e) {
     console.error(e);
+  }
+};
+
+export const updateProduct = async (
+  id: number,
+  updatedData: Partial<Product>
+) => {
+  try {
+    const q = query(collection(db, "products"), where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (document) => {
+      const productRef = doc(db, "products", document.id);
+      await updateDoc(productRef, updatedData);
+      console.log("Document updated:", document.id);
+    });
+  } catch (e) {
+    console.error(`Error updating product: ${e}`);
   }
 };

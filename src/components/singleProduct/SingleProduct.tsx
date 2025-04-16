@@ -9,6 +9,11 @@ import {
 } from "recharts";
 import { Product } from "../../types/Product";
 import "./single.scss";
+import { useState } from "react";
+import Edit from "../edit/Edit";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateProduct } from "../../services/productsApi";
+import { toBoolean } from "../../helpers/toBoolean";
 
 type ChartDataKey = {
   name: string;
@@ -38,6 +43,93 @@ interface Props {
 }
 
 const SingleProduct = (props: Props) => {
+  const singleProduct = [
+    {
+      field: "id",
+      headerName: "ID",
+      type: "string",
+      width: 90,
+      value: props.data.id,
+    },
+    {
+      field: "img",
+      headerName: "Image",
+      type: "string",
+      width: 100,
+      value: props.data.img,
+    },
+    {
+      field: "title",
+      type: "string",
+      headerName: "Title",
+      width: 250,
+      value: props.data.title,
+    },
+    {
+      field: "color",
+      type: "string",
+      headerName: "Color",
+      width: 150,
+      value: props.data.color,
+    },
+    {
+      field: "price",
+      type: "string",
+      headerName: "Price",
+      width: 200,
+      value: props.data.price,
+    },
+    {
+      field: "producer",
+      headerName: "Producer",
+      type: "string",
+      width: 200,
+      value: props.data.producer,
+    },
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      width: 200,
+      type: "string",
+      value: props.data.createdAt,
+    },
+    {
+      field: "inStock",
+      headerName: "In Stock",
+      width: 150,
+      type: "string",
+      value: String(props.data.inStock),
+    },
+  ];
+
+  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: ({ id, productData }: { id: number; productData: Product }) =>
+      updateProduct(id, productData),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["oneProduct", String(props.data.id)],
+      });
+    },
+  });
+
+  const onSubmit = (data: Record<string, string>) => {
+    const fieldData = {
+      title: data.title,
+      price: data.price,
+      color: data.color,
+      producer: data.producer,
+      inStock: toBoolean(data.inStock),
+      img: data.img,
+      id: props.data.id,
+      createdAt: props.data.createdAt,
+    };
+
+    mutation.mutate({ id: Number(props.data.id), productData: fieldData });
+  };
+
   return (
     <div className="single">
       <div className="view">
@@ -45,16 +137,16 @@ const SingleProduct = (props: Props) => {
           <div className="topInfo">
             {props.data.img && <img src={props.data.img} alt="" />}
             <h1>{props.data.title}</h1>
-            <button>Update</button>
+            <button onClick={() => setIsOpen(true)}>Update</button>
           </div>
           <div className="details">
             <div className="item">
               <span className="itemTitle">Price:</span>
-              <span className="itemValue">{props.data.color}</span>
+              <span className="itemValue">{props.data.price}</span>
             </div>
             <div className="item">
               <span className="itemTitle">Color:</span>
-              <span className="itemValue">{props.data.price}</span>
+              <span className="itemValue">{props.data.color}</span>
             </div>
             <div className="item">
               <span className="itemTitle">Producer:</span>
@@ -108,6 +200,14 @@ const SingleProduct = (props: Props) => {
           </ul>
         )}
       </div>
+      {isOpen && (
+        <Edit
+          slug="Product"
+          data={singleProduct}
+          setOpen={setIsOpen}
+          onSubmit={onSubmit}
+        />
+      )}
     </div>
   );
 };

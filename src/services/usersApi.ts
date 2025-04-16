@@ -8,6 +8,7 @@ import {
   doc,
   where,
   addDoc,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { User } from "../types/User";
@@ -66,5 +67,20 @@ export const createUser = async (userData: User) => {
     await addDoc(collection(db, "users"), userData);
   } catch (e) {
     console.error(e);
+  }
+};
+
+export const updateUser = async (id: number, updatedData: Partial<User>) => {
+  try {
+    const q = query(collection(db, "users"), where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach(async (document) => {
+      const userRef = doc(db, "users", document.id);
+      await updateDoc(userRef, updatedData);
+      console.log("Document updated:", document.id);
+    });
+  } catch (e) {
+    console.error(`Error updating user: ${e}`);
   }
 };
