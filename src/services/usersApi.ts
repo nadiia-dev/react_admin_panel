@@ -32,6 +32,22 @@ export const getUsers = async (): Promise<User[]> => {
   })) as User[];
 };
 
+export const getOneUser = async (id: string): Promise<User> => {
+  const userRef = query(collection(db, "users"), where("id", "==", Number(id)));
+  const snapshot = await getDocs(userRef);
+
+  if (snapshot.empty) {
+    throw new Error(`User with ID ${id} not found`);
+  }
+
+  const doc = snapshot.docs[0];
+
+  return {
+    id: doc.id,
+    ...doc.data(),
+  } as User;
+};
+
 export const deleteUser = async (id: number) => {
   try {
     const q = query(collection(db, "users"), where("id", "==", id));

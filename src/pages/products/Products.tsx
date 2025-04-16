@@ -9,7 +9,7 @@ import {
   deleteProduct,
   getProducts,
 } from "../../services/productsApi";
-import { formatDate } from "../../services/formatDate";
+import { formatDate } from "../../helpers/formatDate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Product } from "../../types/Product";
 

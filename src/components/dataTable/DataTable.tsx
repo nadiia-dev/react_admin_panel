@@ -1,8 +1,13 @@
-import { DataGrid, GridColDef, GridToolbar } from "@mui/x-data-grid";
+import {
+  DataGrid,
+  GridColDef,
+  GridEventListener,
+  GridToolbar,
+} from "@mui/x-data-grid";
 import "./dataTable.scss";
 import { User } from "../../types/User";
 import { Product } from "../../types/Product";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface Props {
@@ -13,6 +18,7 @@ interface Props {
 }
 
 const DataTable = (props: Props) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -26,6 +32,10 @@ const DataTable = (props: Props) => {
 
   const handleDelete = (id: number) => {
     mutation.mutate(id);
+  };
+
+  const handleEvent: GridEventListener<"rowClick"> = (params) => {
+    navigate(`${params.row.id}`);
   };
 
   const actionCol: GridColDef = {
@@ -52,6 +62,7 @@ const DataTable = (props: Props) => {
         className="dataGrid"
         rows={props.rows}
         columns={[...props.columns, actionCol]}
+        onRowClick={handleEvent}
         initialState={{
           pagination: {
             paginationModel: {

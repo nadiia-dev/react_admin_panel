@@ -11,8 +11,8 @@ import { db } from "./firebaseConfig";
 import { Product } from "../types/Product";
 
 export const getProducts = async (): Promise<Product[]> => {
-  const usersRef = collection(db, "products");
-  const q = query(usersRef);
+  const productsRef = collection(db, "products");
+  const q = query(productsRef);
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({
     id: doc.id,
@@ -20,10 +20,26 @@ export const getProducts = async (): Promise<Product[]> => {
   })) as Product[];
 };
 
+export const getOneProduct = async (id: string): Promise<Product> => {
+  const productRef = query(
+    collection(db, "products"),
+    where("id", "==", Number(id))
+  );
+  const snapshot = await getDocs(productRef);
+  if (snapshot.empty) {
+    throw new Error(`Product with ID ${id} not found`);
+  }
+
+  const doc = snapshot.docs[0];
+  return {
+    id: doc.id,
+    ...doc.data(),
+  } as Product;
+};
+
 export const deleteProduct = async (id: number) => {
   try {
     const q = query(collection(db, "products"), where("id", "==", id));
-    console.log(q);
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (document) => {
       await deleteDoc(doc(db, "products", document.id));

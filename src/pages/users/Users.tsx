@@ -5,7 +5,7 @@ import { createUser, deleteUser, getUsers } from "../../services/usersApi";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import Add from "../../components/add/Add";
-import { formatDate } from "../../services/formatDate";
+import { formatDate } from "../../helpers/formatDate";
 import { User } from "../../types/User";
 
 const columns: GridColDef[] = [
