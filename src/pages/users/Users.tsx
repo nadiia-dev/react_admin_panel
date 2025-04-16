@@ -96,7 +96,7 @@ const Users = () => {
       verified: Boolean(data.verified),
       id: String(Math.floor(Math.random() * (10000 - 16 + 1)) + 16),
       createdAt: formatDate(new Date()),
-      img: "",
+      img: data.img,
     };
 
     mutation.mutate(fieldData);
