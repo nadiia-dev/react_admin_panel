@@ -9,6 +9,7 @@ import { User } from "../../types/User";
 import { Product } from "../../types/Product";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Box } from "@mui/material";
 
 interface Props {
   columns: GridColDef[];
@@ -57,7 +58,7 @@ const DataTable = (props: Props) => {
   };
 
   return (
-    <div className="dataTable">
+    <div>
       <DataGrid
         className="dataGrid"
         rows={props.rows}
@@ -79,7 +80,6 @@ const DataTable = (props: Props) => {
         }}
         pageSizeOptions={[5]}
         checkboxSelection
-        disableRowSelectionOnClick
         disableColumnFilter
         disableDensitySelector
         disableColumnSelector
