@@ -147,8 +147,10 @@ const SingleUser = (props: Props) => {
             <h1>
               {props.data.firstName} {props.data.lastName}
             </h1>
-            <button onClick={() => setIsOpen(true)}>Update</button>
           </div>
+          <button className="btn" onClick={() => setIsOpen(true)}>
+            Update
+          </button>
           <div className="details">
             <div className="item">
               <span className="itemTitle">Email:</span>

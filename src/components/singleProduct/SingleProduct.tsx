@@ -137,8 +137,10 @@ const SingleProduct = (props: Props) => {
           <div className="topInfo">
             {props.data.img && <img src={props.data.img} alt="" />}
             <h1>{props.data.title}</h1>
-            <button onClick={() => setIsOpen(true)}>Update</button>
           </div>
+          <button className="btn" onClick={() => setIsOpen(true)}>
+            Update
+          </button>
           <div className="details">
             <div className="item">
               <span className="itemTitle">Price:</span>
