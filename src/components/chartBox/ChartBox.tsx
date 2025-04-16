@@ -10,6 +10,7 @@ type Props = {
   number: number | string;
   percentage: number;
   chartData: object[];
+  period: string;
 };
 
 const ChartBox = (props: Props) => {
@@ -59,7 +60,7 @@ const ChartBox = (props: Props) => {
           >
             {props.percentage}%
           </span>
-          <span className="duration">this month</span>
+          <span className="duration">{props.period}</span>
         </div>
       </div>
     </div>
