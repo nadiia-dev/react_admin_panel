@@ -9,7 +9,6 @@ import { User } from "../../types/User";
 import { Product } from "../../types/Product";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Box } from "@mui/material";
 
 interface Props {
   columns: GridColDef[];
